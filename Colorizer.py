@@ -6,17 +6,17 @@ import tempfile
 import urllib.request
 
 def download_model():
-    model_url = https://github.com/Ayeshah666/streamlit-colorizer-app/releases/download/v1.0/colorization_release_v2.caffemodel"
+    model_url = "https://github.com/Ayeshah666/streamlit-colorizer-app/releases/download/v1.0/colorization_release_v2.caffemodel"
     model_path = "colorization_release_v2.caffemodel"
     if not os.path.exists(model_path):
+        os.makedirs("Model", exist_ok=True)
         urllib.request.urlretrieve(model_url, model_path)
-
 @st.cache_resource
 def load_model():
     download_model()
-    proto = "Model/colorization_deploy_v2.prototxt"
-    model = "Model/colorization_release_v2.caffemodel"
-    pts = "Model/pts_in_hull.npy"
+    proto = "colorization_deploy_v2.prototxt"
+    model = "colorization_release_v2.caffemodel"
+    pts = "pts_in_hull.npy"
 
     net = cv2.dnn.readNetFromCaffe(proto, model)
     kernel = np.load(pts)
