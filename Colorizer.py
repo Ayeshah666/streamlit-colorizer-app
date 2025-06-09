@@ -3,25 +3,32 @@ import numpy as np
 import cv2
 import os
 import tempfile
+import urllib.request
 
-# ---------- Load Model ----------
+def download_model():
+    model_url = "http://eecs.berkeley.edu/~rich.zhang/projects/2016_colorization/files/demo_v2/colorization_release_v2.caffemodel"
+    model_path = "Model/colorization_release_v2.caffemodel"
+    if not os.path.exists(model_path):
+        urllib.request.urlretrieve(model_url, model_path)
+
 @st.cache_resource
 def load_model():
-    proto = "colorization_deploy_v2.prototxt"
-    model = "colorization_release_v2.caffemodel"
-    points = "pts_in_hull.npy"
+    download_model()
+    proto = "Model/colorization_deploy_v2.prototxt"
+    model = "Model/colorization_release_v2.caffemodel"
+    pts = "Model/pts_in_hull.npy"
 
     net = cv2.dnn.readNetFromCaffe(proto, model)
-    pts = np.load(points)
-    pts = pts.transpose().reshape(2, 313, 1, 1)
+    kernel = np.load(pts)
+    kernel = kernel.transpose().reshape(2, 313, 1, 1)
 
     class8 = net.getLayerId("class8_ab")
     conv8 = net.getLayerId("conv8_313_rh")
-    net.getLayer(class8).blobs = [pts.astype("float32")]
+    net.getLayer(class8).blobs = [kernel.astype("float32")]
     net.getLayer(conv8).blobs = [np.full([1, 313], 2.606, dtype="float32")]
 
     return net
-
+    
 net = load_model()
 
 # ---------- Streamlit UI ----------
