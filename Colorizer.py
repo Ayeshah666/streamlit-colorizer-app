@@ -6,8 +6,8 @@ import tempfile
 import urllib.request
 
 def download_model():
-    model_url = "http://eecs.berkeley.edu/~rich.zhang/projects/2016_colorization/files/demo_v2/colorization_release_v2.caffemodel"
-    model_path = "Model/colorization_release_v2.caffemodel"
+    model_url = https://github.com/Ayeshah666/streamlit-colorizer-app/releases/download/v1.0/colorization_release_v2.caffemodel"
+    model_path = "colorization_release_v2.caffemodel"
     if not os.path.exists(model_path):
         urllib.request.urlretrieve(model_url, model_path)
 
